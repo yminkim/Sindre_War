@@ -1,0 +1,533 @@
+using System;
+using System.Runtime.InteropServices.ComTypes;
+using System.Threading;
+
+namespace RedMoon_v._01
+{
+    class Program
+    {
+        public class Info
+        {
+            //////////////////////////////////////
+            ///           변수보관소           ///
+            //////////////////////////////////////
+            /// 개인 프로젝트 이기 때문에
+            /// 접근제한자는 public으로 통일
+            ///  (⁰︻⁰)  프링글스 맨
+            bool boolBT1 = true; // 배틀 시작 불
+            public string _name;
+            public string _jobName;
+            public string _face;
+            public string _opScript;
+
+            public int _level;
+            public int _life;
+            public int _gold;
+
+            public double _hp;
+            public double _maxHp;
+            public double _exp;
+            public double _maxExp;
+            public double _mana;
+            public double _maxMana;
+            public double _str;
+
+            // 무기 방어구 스탯은 대기
+            //////////////////////////////////////
+            //////////////////////////////////////
+
+            public void BattleInfo(Info _attacker, Info _target)
+            {
+                Console.WriteLine("==================");
+                Console.WriteLine($"[{_target._name}]");
+                //_target.hpVar();
+                Console.WriteLine($"◎체력   : {_target._hp:F0}/{_target._maxHp:F0}");
+                Console.WriteLine($"◎공격력 : {_target._str:F0}");
+                Console.WriteLine("==================");
+                Console.WriteLine($"{_target._face}\n\n");
+
+                Console.WriteLine($"             {_attacker._face}");
+                Console.WriteLine("==================");
+                Console.WriteLine($"[Lv.{_attacker._level} {_attacker._name}]");
+                //attacker.hpVar();
+                Console.WriteLine($"◎목숨   : {_attacker._life}");
+                Console.WriteLine($"◎체력   : {_attacker._hp:F0}/{_attacker._maxHp:F0}");
+                Console.WriteLine($"◎공격력 : {_attacker._str:F0}");
+                Console.WriteLine($"◎마나   : {_attacker._mana:F0}/{_attacker._maxMana:F0}");
+                Console.WriteLine("==================");
+            }
+            ///////////////////////////////////////
+
+            public void PlayerFight(Info _attacker, Info _target)
+            {
+                Random ranStr = new Random();
+                int rStr = ranStr.Next(1, 10);
+                if (rStr == 1) // 치뎀
+                {
+                    _target._hp = _target._hp - (_attacker._str * 1.2);
+                    Console.Clear();
+                    Console.WriteLine(_attacker._name + "(이)가 공격합니다!");
+                    Thread.Sleep(1100);
+                    Console.Clear();
+                    Console.WriteLine("급소를 공격했다!");
+                    Thread.Sleep(1100);
+                    Console.Clear();
+                }
+
+                else
+                {
+                    _target._hp -= _attacker._str;
+                    Console.Clear();
+                    Console.WriteLine(_attacker._name + "(이)가 공격합니다!");
+                    Thread.Sleep(1100);
+                    Console.Clear();
+                }
+                if (_target._hp <= 0)
+                {
+                    _target._hp = 0;
+                    
+                }
+
+            } // plyaer fight end
+
+            ////////////////////////////////////////
+            public void MonsterFight(Info _attacker, Info _target)
+            {
+                Random ranStr = new Random();
+                int rStr = ranStr.Next(1, 10);
+                if (rStr == 1) // 치뎀
+                {
+                    _target._hp = _target._hp - (_attacker._str * 1.3);
+                    Console.Clear();
+                    Console.WriteLine(_attacker._name + "(이)가 강하게 공격해온다.");
+                    Thread.Sleep(1100);
+                    Console.Clear();
+                    Console.WriteLine("급소에 정확히 명중했다.");
+                    Thread.Sleep(1100);
+                    Console.Clear();
+                }
+
+                else
+                {
+                    _target._hp -= _attacker._str;
+                    Console.Clear();
+                    Console.WriteLine(_attacker._name + "(이)가 공격을 합니다.");
+                    Thread.Sleep(1100);
+                    Console.Clear();
+                }
+
+                if (_target._hp <= 0)
+                {
+                    if (_target._life >= 1)
+                    {
+                        _target._life -= 1;
+                        _target._hp = _target._maxHp;
+                    }
+                }
+
+            } // monster fight end
+
+            ////////////////////////////////////////
+            public void BattleMenu()
+            {
+                Console.WriteLine("┌──────────────────────────┐");
+                Console.WriteLine("│   무엇을 하시겠습니까?   │");
+                Console.WriteLine("├──────────────────────────┤");
+                Console.WriteLine("│  1.전투  2.가방  3.도망  │");
+                Console.WriteLine("└──────────────────────────┘");
+                Console.WriteLine("");
+                Console.WriteLine("");
+            }
+            /////////////////////////////////////////
+            public void LevelUp(Info _attatcker)
+            {
+                Console.Clear();
+                Console.WriteLine("LEVEL UP!!");
+                Thread.Sleep(1400);
+                
+                    Console.Clear();
+                    Console.WriteLine("[스탯 증가]");
+                    Console.WriteLine($"◈레벨  : {_attatcker._level} ▶ {_attatcker._level+1}");
+                    Console.WriteLine($"◈경험치: {_attatcker._maxExp:F0} ▶ {_attatcker._maxExp+50:F0}");
+                    Console.WriteLine($"◈체력  : {_attatcker._maxHp:F0} ▶ {_attatcker._maxHp*1.2:F0}");
+                    Console.WriteLine($"◈공격력: {_attatcker._str:F0} ▶ {_attatcker._str*1.2:F0}");
+                    Console.WriteLine($"◈마나  : {_attatcker._maxMana:F0} ▶ {_attatcker._maxMana*1.2:F0}");
+
+                    Console.WriteLine("\n0. 확인");
+                    
+
+                    _attatcker._exp = 0;
+                    _attatcker._maxExp +=50;
+                    _attatcker._level += 1;
+
+                    _attatcker._maxHp *= 1.2;
+                    double maxHHp = _attatcker._maxHp;
+                    _attatcker._hp = maxHHp;
+
+                    _attatcker._maxMana *= 1.2;
+                    double maxMMp = _attatcker._maxMana;
+                    _attatcker._mana = maxMMp;
+
+                    _attatcker._str *= 1.2;
+
+                Console.ReadLine();
+
+            }
+            /////////////////////////////////////////
+            public void BattleResult(Info _attatcker, Info _target)
+            {
+                if(_attatcker._life == 0)
+                {
+                    _attatcker._life = 1;
+                    _attatcker._hp = _attatcker._maxHp * 0.1;
+                    Console.Clear();
+                    Console.WriteLine("사망하셨습니다.");
+                    Thread.Sleep(1400);
+                    boolBT1 = false;
+                }
+
+                if(_target._hp <=0)
+                {
+                    _attatcker._exp += _target._exp;
+                    _attatcker._gold += _target._gold;
+                    Console.Clear();
+                    Console.WriteLine("승리하셨습니다.");
+                    Thread.Sleep(1400);
+                    Console.Clear();
+                    Console.WriteLine("[보상]");
+                    Console.WriteLine($"골드  : +{_target._gold}");
+                    Console.WriteLine($"경험치: +{_target._exp}");
+                    Console.WriteLine("\n0.확인");
+                    Console.ReadLine();
+                    if (_attatcker._exp >= _attatcker._maxExp)
+                        LevelUp(_attatcker);
+                    boolBT1 = false;
+                }
+
+            }// bresult end
+            /////////////////////////////////////////
+
+            public void BattleMain(Info _attacker, Info _target)
+            {
+                boolBT1 = true;
+                while(boolBT1)
+                {
+                    Random runaway = new Random();
+                    int runawayo = runaway.Next(1, 6);
+                    Console.Clear();
+                    BattleInfo(_attacker, _target);
+                    BattleMenu();
+
+                    string inputBattleMenu = Console.ReadLine();
+                    switch(inputBattleMenu)
+                    {
+                        ////////////////////
+                        case "1": // 전투
+                            bool boolFight1 = true;
+                            while(boolFight1)
+                            {
+                                Console.Clear();
+                                Console.WriteLine("[전투]");
+                                Console.WriteLine("1. 평타");
+                                Console.WriteLine("2. 스킬");
+                                Console.WriteLine("");
+                                Console.WriteLine("0. 뒤로가기");
+
+                                string inputHowFight = Console.ReadLine();
+                                switch(inputHowFight)
+                                {
+                                    case "1": //평타 << 아직 전투 테스트 안함tc만들고 ㄱㄱ
+                                        PlayerFight(_attacker, _target);
+                                        BattleInfo(_attacker, _target);
+                                        Thread.Sleep(1300);
+                                        if (_target._hp <= 0)
+                                            boolFight1 = false;
+                                        else
+                                            MonsterFight(_target, _attacker);
+                                        boolFight1 = false;
+
+                                        break;
+                                    ////////////////////
+                                    case "2": //스킬
+                                        break;
+                                    ////////////////////
+                                    case "0":
+                                        boolFight1 = false;
+                                        break;
+                                    ////////////////////
+                                    default:
+                                        break;
+                                } // how fight switch end
+                            } // 전투메뉴 while 엔드
+                            BattleResult(_attacker, _target);
+                            break;
+                        ////////////////////
+                        case "2": // 가방
+                            break;
+                        ////////////////////
+                        case "3": // 도망
+                            if(runawayo == 1)
+                            {
+                                Console.Clear();
+                                Console.WriteLine("도망칩니다!");
+                                Thread.Sleep(1356);
+                                boolBT1 = false;
+                            }
+                            else
+                            {
+                                Console.Clear();
+                                Console.WriteLine("도망에 실패하였습니다.");
+                                Thread.Sleep(1300);
+                                MonsterFight(_target, _attacker);
+                            }
+                            break;
+                        ////////////////////
+                        default:
+                            break;
+                        ////////////////////
+                    } // 스위치 엔드    
+
+                } // bt1 엔드
+            } // 배틀메인 
+
+
+            ///////////////////////////////////////
+        } // Info End//////////////////////////////
+
+        public class Player : Info
+        {
+            public void NickName()
+            {
+                Console.Clear();
+                bool nickNameBool = true;
+                while (nickNameBool)
+                {
+                    Console.Clear();
+                    Console.WriteLine("당신의 이름은 무엇인가요? (7글자 이내)");
+                    Console.Write("입력:");
+
+
+                    string inputName = Console.ReadLine();
+                    if (inputName.Length < 7)
+                    {
+                        _name = inputName;
+                        nickNameBool = false;
+                    }
+
+                    else
+                    {
+                        Console.Clear();
+                        Console.WriteLine("7글자 이내로 입력해주세요.");
+                        Thread.Sleep(1200);
+                    }
+
+
+                } // while end
+            } // Nickname() End
+
+            public void Job()
+            {
+                bool ChooseJob = true;
+                while (ChooseJob)
+                {
+                    Console.Clear();
+                    Console.WriteLine("┌───────────────────┐");
+                    Console.WriteLine("│ 직업을 골라주세욥!│");
+                    Console.WriteLine("├───────────────────┴──────────────────┐");
+                    Console.WriteLine("│①전사  : 체력 75 | 공격력 6 | 마나 40│");
+                    Console.WriteLine("│②도적  : 체력 60 | 공격력 6 | 마나 50│");
+                    Console.WriteLine("│③마법사: 체력 50 | 공격력 6 | 마나 60│");
+                    Console.WriteLine("└──────────────────────────────────────┘");
+                    Console.WriteLine("");
+
+                    string inputJob = Console.ReadLine();
+                    switch(inputJob)
+                    {
+                        case "1" :
+                            _jobName = "전사";
+                            _face = "(`ㅂ’)";
+                            _life = 2;
+                            _level = 1;
+                            _maxHp = 75;
+                            _hp = _maxHp;
+                            _str = 18;
+                            _maxExp = 100;
+                            _exp = 0;
+                            _maxMana = 40;
+                            _mana = _maxMana;
+                            _gold = 10000;
+                            ChooseJob = false;
+                            break;
+
+                        case "2" :
+                            _jobName = "도적";
+                            _face = "눈_눈";
+                            _life = 2;
+                            _level = 1;
+                            _maxHp = 60;
+                            _hp = _maxHp;
+                            _str = 6;
+                            _maxExp = 100;
+                            _exp = 0;
+                            _maxMana = 50;
+                            _mana = _maxMana;
+                            _gold = 10000;
+                            ChooseJob = false;
+                            break;
+                        case "3" :
+                            _jobName = "마법사";
+                            _face = "±∇±";
+                            _life = 2;
+                            _level = 1;
+                            _maxHp = 50;
+                            _hp = _maxHp;
+                            _str = 6;
+                            _maxExp = 100;
+                            _exp = 0;
+                            _maxMana = 60;
+                            _mana = _maxMana;
+                            _gold = 10000;
+                            ChooseJob = false;
+                            break;
+
+                        default :
+                            break;
+
+                    } // switch end
+                } //while end
+            } // Job() End
+
+
+
+        } // class Player End
+
+        public class Monster : Info
+        {
+            public void GoblinA()
+            {
+                _name = "고블린 전사";
+                _opScript = "온 김에 먹히고 가라!!";
+                _face = "[º益º]";
+                _maxHp = 17;
+                _hp = _maxHp;
+                _str = 26; // 4
+                _exp = 13;
+                _gold = 520;
+            }
+
+            public void GoblinB()
+            {
+                _name = "고블린 아처";
+                _opScript = "니 머리에 한 발~";
+                _face = "[º益￠]";
+                _maxHp = 17;
+                _hp = _maxHp;
+                _str = 8;
+                _exp = 18;
+                _gold = 680;
+            }
+
+
+        } // class Monster End
+        static void Main(string[] args)
+        {
+            Info info = new Info();
+            Player player = new Player();
+            Monster mon = new Monster();
+
+            // 프롤로그 만들기~(스킵기능도)
+            
+            player.NickName();
+            player.Job();
+            Console.Clear();
+            Console.WriteLine($"어서오세요 {player._jobName} {player._name}님");
+            Thread.Sleep(1200);
+
+            while (true) //전체 while 
+            {
+                Console.Clear();
+                Console.WriteLine("[내정보]");
+                Console.WriteLine($"Lv.{player._level} {player._jobName} {player._name}");
+                Console.WriteLine($"EXP: {player._exp:F0}/{player._maxExp:F0}");
+                Console.WriteLine($"목숨: {player._life}");
+                Console.WriteLine($"체력: {player._hp:F0}/{player._maxHp:F0}");
+                Console.WriteLine($"공격력: {player._str:F0}");
+                Console.WriteLine($"마나: {player._mana:F0}/{player._maxMana:F0}");
+                Console.WriteLine($"골드: {player._gold}");
+                Console.WriteLine("┌──────────────────────────┐");
+                Console.WriteLine("│        미드가르드        │");
+                Console.WriteLine("├──────────────────────────┤");
+                Console.WriteLine("│ 1.광장  2.상점  3.드워프 │");
+                Console.WriteLine("│ 4.병원  5.모험  6.광산   │"); // 5.지역이동하는 이름
+                Console.WriteLine("└──────────────────────────┘");
+                //( 메뉴 재구성 해라
+                string inputMenu = Console.ReadLine();
+                switch(inputMenu)
+                {
+                    case "1"://광장 > 혹은 괜찮은 이름으로...
+                        info.LevelUp(player);
+                        break;
+
+                    case "2"://드워프
+                        break;
+
+                    case "3": // 
+                        break;
+
+                    case "4": //병원
+                        break;
+
+                    case "5": // 모험
+                        bool boolDGmenu = true;
+                        while (boolDGmenu)
+                        {
+                            Console.Clear();
+                            Console.WriteLine("[던전]");
+                            Console.WriteLine("1. 밀림원");
+                            Console.WriteLine("2. 세계수"); // 밀림원에서 헤쳐나가야 나옴
+                            Console.WriteLine("\n0. 뒤로가기");
+                            /*Console.WriteLine("1. 알프하임");
+                            Console.WriteLine("2. 요툰하임"); // 세계수 메뉴임
+                            Console.WriteLine("3. 헬하임"); // 다 보이게 하고 못 들어가게만
+                            Console.WriteLine("4. 아스가르드"); // 순서는 나중에 다시 재정비..
+                            Console.WriteLine("0. 뒤로가기");
+                            */
+                            Console.WriteLine("");
+                            string inputDungeon = Console.ReadLine();
+                            switch (inputDungeon)
+                            {
+                                case "1":
+                                    Console.Clear();
+                                    mon.GoblinA();
+                                    info.BattleMain(player, mon);
+                                    break;
+                                case "2":
+                                    break;
+                                case "3":
+                                    break;
+                                case "0":
+                                    boolDGmenu = false;
+                                    break;
+                                default:
+                                    break;
+
+                            }// input Dungeon end
+                        }//while end
+                        break;
+                    case "6": // 광산
+                        break;
+
+                    default:
+                        break;
+
+                } // menu switch end
+                
+            } // 태초의 while E.N.D !!!!!!!!
+
+             
+           
+
+
+        } //main END
+    } // Class Program End
+} // namespace End
